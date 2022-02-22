@@ -7,8 +7,6 @@ Use at your own risk! I have tested this tool only on my own system.
 I do not know what the effect of modifying the registry key will be be on other systems, under other circumstances.
 
 Works on Windows 10.
-
-How does it work
 ```
 
 ```css
