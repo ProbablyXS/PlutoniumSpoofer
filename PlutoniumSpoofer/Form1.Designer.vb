@@ -29,6 +29,7 @@ Partial Class Form1
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ListWriteBox = New MetroSet_UI.Controls.MetroSetListBox()
         Me.MetroSetComboBox1 = New MetroSet_UI.Controls.MetroSetComboBox()
+        Me.Button3 = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'Button1
@@ -134,6 +135,20 @@ Partial Class Form1
         Me.MetroSetComboBox1.ThemeName = "MetroDark"
         Me.MetroSetComboBox1.Visible = False
         '
+        'Button3
+        '
+        Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(170, Byte), Integer), CType(CType(170, Byte), Integer), CType(CType(170, Byte), Integer))
+        Me.Button3.Location = New System.Drawing.Point(418, 257)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(86, 36)
+        Me.Button3.TabIndex = 7
+        Me.Button3.TabStop = False
+        Me.Button3.Text = "Back to original"
+        Me.Button3.UseVisualStyleBackColor = True
+        Me.Button3.Visible = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -143,6 +158,7 @@ Partial Class Form1
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.ClientSize = New System.Drawing.Size(516, 347)
         Me.ControlBox = False
+        Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.MetroSetComboBox1)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Label1)
@@ -164,4 +180,5 @@ Partial Class Form1
     Friend WithEvents Label1 As Label
     Friend WithEvents ListWriteBox As MetroSet_UI.Controls.MetroSetListBox
     Friend WithEvents MetroSetComboBox1 As MetroSet_UI.Controls.MetroSetComboBox
+    Friend WithEvents Button3 As Button
 End Class

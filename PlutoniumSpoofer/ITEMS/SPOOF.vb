@@ -13,6 +13,9 @@ Module SPOOF
     Public New_MacAdress As String
     Public Started As Boolean = False
     Public resultNumbMacAddress As String
+    Public resultNumbVolumeId As String
+    Public volOlderValue As String
+
     Dim proc As New Process()
 
     Public Async Sub Spoof()
@@ -30,6 +33,22 @@ Module SPOOF
 
             Await Delay() 'WAIT 5 SECONDES
 
+            If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Spoofer") Is Nothing Then
+                My.Computer.Registry.SetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer",
+"prodID", My.Computer.Registry.GetValue(LocaprodID, "ProductId", ""))
+
+                My.Computer.Registry.SetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer",
+      "MachineGUID", My.Computer.Registry.GetValue(LocaMachID, "MachineGuid", ""))
+
+                My.Computer.Registry.SetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer",
+      "ComputerName", My.Computer.Registry.GetValue(LocaMachName, "ComputerName", ""))
+
+                My.Computer.Registry.SetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer",
+      "MacAddress", My.Computer.Registry.GetValue("HKEY_LOCAL_MACHINE\" & LocaMacAddress & "00" & resultNumbMacAddress, "NetworkAddress", ""))
+
+                Form1.RunCommandCom("vol c:", "", False)
+            End If
+
             Await ProdID()
             Await MachineGUID()
             Await MachineNAME()
@@ -38,6 +57,67 @@ Module SPOOF
             Await VolumeId()
 
             Await LOG()
+
+            Dim messaging As Integer = MsgBox("Would do you want to restart your computer now ?", MsgBoxStyle.YesNo)
+
+            If messaging = vbYes Then
+
+                Shell("Shutdown -r -t 1", vbHide)
+
+            End If
+
+            Started = False
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Public Async Sub SpoofOriginal()
+
+        Try
+
+            If Started = True Then
+                Form1.ListWriteBox.Items.Add("● The spoofer is already started")
+                Exit Sub
+            Else
+                Started = True
+            End If
+
+            Form1.ListWriteBox.Items.Add("● Starting SPOOFER in 5 seconds")
+
+            Await Delay() 'WAIT 5 SECONDES
+
+            My.Computer.Registry.SetValue(LocaprodID,
+      "ProductId", My.Computer.Registry.GetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer", "prodID", ""))
+
+            My.Computer.Registry.SetValue(LocaMachID,
+      "MachineGuid", My.Computer.Registry.GetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer", "MachineGUID", ""))
+
+            My.Computer.Registry.SetValue(LocaMachName,
+      "ComputerName", My.Computer.Registry.GetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer", "ComputerName", ""))
+
+            My.Computer.Registry.SetValue("HKEY_LOCAL_MACHINE\" & LocaMacAddress & "00" & resultNumbMacAddress,
+      "NetworkAddress", My.Computer.Registry.GetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer", "MacAddress", ""))
+
+            Dim Paths As String = Path.Combine(Path.GetTempPath(), "Volumeid.exe")
+            File.WriteAllBytes(Paths, My.Resources.Volumeid)
+            Process.Start(Paths)
+
+            My.Computer.Registry.SetValue("HKEY_CURRENT_USER\Software\Sysinternals\VolumeID\", "EulaAccepted", "1")
+
+            resultNumbVolumeId = My.Computer.Registry.GetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer", "VolumeId", "")
+
+            Form1.RunCommandCom(Paths, "c: " & resultNumbVolumeId, False)
+
+            Await LOG()
+
+
+            My.Computer.Registry.LocalMachine.DeleteSubKey(
+    "Software\Spoofer")
+
+
 
             Dim messaging As Integer = MsgBox("Would do you want to restart your computer now ?", MsgBoxStyle.YesNo)
 
@@ -168,7 +248,9 @@ Module SPOOF
 
         My.Computer.Registry.SetValue("HKEY_CURRENT_USER\Software\Sysinternals\VolumeID\", "EulaAccepted", "1")
 
-        Form1.RunCommandCom(Paths, "c: " & generateRandomVolumeId(), False)
+        resultNumbVolumeId = generateRandomVolumeId()
+
+        Form1.RunCommandCom(Paths, "c: " & resultNumbVolumeId, False)
 
     End Function
 

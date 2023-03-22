@@ -43,6 +43,10 @@
 
         ListWriteBox.Items.Add("● Welcome to Plutonium Spoofer")
 
+        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Spoofer") IsNot Nothing Then
+            Button3.Visible = True
+        End If
+
         Label1.Visible = False
         Button1.Visible = True
         MetroSetComboBox1.Visible = True
@@ -103,6 +107,17 @@
 
             End If
 
+            If ez.Contains("Volume Serial Number is") Then
+
+                Dim wordtofind As String = "is"
+                Dim findval = ez.IndexOf(wordtofind)
+                SPOOF.volOlderValue = ez.Substring(findval + wordtofind.Length, ez.Length - wordtofind.Length - findval).ToString()
+
+                My.Computer.Registry.SetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Spoofer",
+      "VolumeId", volOlderValue.ToString())
+
+            End If
+
             ListWriteBox.Items.Add("●" & ez)
 
         End If
@@ -136,4 +151,9 @@
 
     End Sub
 
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+
+        SPOOF.SpoofOriginal()
+
+    End Sub
 End Class
